@@ -36,7 +36,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -124,6 +126,10 @@ public class AuthorizationFragment extends Fragment {
     private static String sCustomTabResponseUri;
 
     private boolean mBrowserFlowStarted = false;
+
+    private TextView mTextViewUrl;
+
+    private ImageView mImageViewClose;
 
     private WebView mWebView;
 
@@ -278,6 +284,8 @@ public class AuthorizationFragment extends Fragment {
         final String methodName = "#onCreateView";
         final View view = inflater.inflate(R.layout.common_activity_authentication, container, false);
         mProgressBar = view.findViewById(R.id.common_auth_webview_progressbar);
+        mTextViewUrl = view.findViewById(R.id.text_url);
+        mImageViewClose = view.findViewById(R.id.icon_close);
 
         Telemetry.emit(new UiStartEvent().putUserAgent(mAuthorizationAgent));
         if (mAuthorizationAgent == AuthorizationAgent.WEBVIEW) {
@@ -303,6 +311,7 @@ public class AuthorizationFragment extends Fragment {
                     Logger.info(TAG + methodName, "Launching embedded WebView for acquiring auth code.");
                     Logger.infoPII(TAG + methodName, "The start url is " + mAuthorizationRequestUrl);
                     mWebView.loadUrl(mAuthorizationRequestUrl, mRequestHeaders);
+                    mTextViewUrl.setText(mAuthorizationRequestUrl);
 
                     // The first page load could take time, and we do not want to just show a blank page.
                     // Therefore, we'll show a spinner here, and hides it when mAuthorizationRequestUrl is successfully loaded.
@@ -310,7 +319,15 @@ public class AuthorizationFragment extends Fragment {
                     mProgressBar.setVisibility(View.VISIBLE);
                 }
             });
+
+            mImageViewClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    cancelAuthorization();
+                }
+            });
         }
+
 
         return view;
     }
