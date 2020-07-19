@@ -72,9 +72,9 @@ public class WebViewAuthorizationFragment extends AuthorizationFragment {
 
     private ProgressBar mProgressBar;
 
-    private TextView mUrlText;
+    private TextView mTextViewUrl;
 
-    private ImageView mCloseIcon;
+    private ImageView mImageViewClose;
 
     private Intent mAuthIntent;
 
@@ -132,8 +132,8 @@ public class WebViewAuthorizationFragment extends AuthorizationFragment {
         final String methodName = "#onCreateView";
         final View view = inflater.inflate(R.layout.common_activity_authentication, container, false);
         mProgressBar = view.findViewById(R.id.common_auth_webview_progressbar);
-        mCloseIcon = view.findViewById(R.id.icon_close);
-        mUrlText = view.findViewById(R.id.text_url);
+        mTextViewUrl = view.findViewById(R.id.text_url);
+        mImageViewClose = view.findViewById(R.id.icon_close);
 
         final AzureActiveDirectoryWebViewClient webViewClient = new AzureActiveDirectoryWebViewClient(
                 getActivity(),
@@ -160,7 +160,7 @@ public class WebViewAuthorizationFragment extends AuthorizationFragment {
                 Logger.info(TAG + methodName, "Launching embedded WebView for acquiring auth code.");
                 Logger.infoPII(TAG + methodName, "The start url is " + mAuthorizationRequestUrl);
                 mWebView.loadUrl(mAuthorizationRequestUrl, mRequestHeaders);
-                mUrlText.setText(mAuthorizationRequestUrl);
+                mTextViewUrl.setText(mAuthorizationRequestUrl);
 
                 // The first page load could take time, and we do not want to just show a blank page.
                 // Therefore, we'll show a spinner here, and hides it when mAuthorizationRequestUrl is successfully loaded.
@@ -169,7 +169,7 @@ public class WebViewAuthorizationFragment extends AuthorizationFragment {
             }
         });
 
-        mCloseIcon.setOnClickListener(new View.OnClickListener() {
+        mImageViewClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cancelAuthorization(true);
